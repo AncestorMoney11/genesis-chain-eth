@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMONEY - 数字文明创世协议</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 60px 40px;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section h2 {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .section p {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .documents {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .document-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .document-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            transform: translateY(-5px);
+        }
+        
+        .document-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .document-card p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+        }
+        
+        .btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .preview-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            min-height: 600px;
+        }
+        
+        .preview-container iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 6px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: #666;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        footer {
+            background: #f8f9fa;
+            padding: 30px 40px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        footer p {
+            margin-bottom: 10px;
+        }
+        
+        .github-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .github-link:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .section h2 {
+                font-size: 1.5em;
+            }
+            
+            .documents {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌍 AMONEY</h1>
+            <p>数字文明创世协议 - Genesis Chain Ethereum</p>
+        </header>
+        
+        <div class="content">
+            <div class="section">
+                <h2>📖 项目文档</h2>
+                <p>欢迎来到 AMONEY 数字文明创世协议的官方文档中心。在这里，您可以在线预览项目的白皮书和详细报告，了解我们的愿景、技术架构和社区建设计划。</p>
+                
+                <div class="documents">
+                    <div class="document-card">
+                        <h3>📄 白皮书</h3>
+                        <p>深入了解 AMONEY 的核心理念、技术架构和创新机制。本白皮书详细阐述了数字文明创世协议的设计原理和实现方案。</p>
+                        <div class="button-group">
+                            <button class="btn" onclick="showPreview('whitepaper')">在线预览</button>
+                            <a href="AMONEY_Whitepaper.pdf" class="btn btn-secondary" download>下载 PDF</a>
+                        </div>
+                    </div>
+                    
+                    <div class="document-card">
+                        <h3>📊 项目报告</h3>
+                        <p>查看项目的详细分析报告，包括技术实现细节、部署信息、合约地址和社区建设建议。</p>
+                        <div class="button-group">
+                            <button class="btn" onclick="showPreview('report')">在线预览</button>
+                            <a href="e03041e8269a078ffc6f8c5d2920fe07.pptx" class="btn btn-secondary" download>下载 PPTX</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>📺 文档预览</h2>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('whitepaper')">白皮书</button>
+                    <button class="tab-btn" onclick="switchTab('report')">项目报告</button>
+                </div>
+                
+                <div id="whitepaper" class="tab-content active">
+                    <div class="preview-container">
+                        <iframe src="https://docs.google.com/gview?url=https://raw.githubusercontent.com/AncestorMoney11/genesis-chain-eth/master/AMONEY_Whitepaper.pdf&embedded=true"></iframe>
+                    </div>
+                </div>
+                
+                <div id="report" class="tab-content">
+                    <div class="preview-container">
+                        <p style="text-align: center; padding: 40px; color: #999;">
+                            由于 PPTX 文件的特性，在线预览可能需要一些时间加载。<br>
+                            建议使用下方的下载链接获取完整的演示文稿。
+                        </p>
+                        <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=https://raw.githubusercontent.com/AncestorMoney11/genesis-chain-eth/master/e03041e8269a078ffc6f8c5d2920fe07.pptx" style="height: 800px;"></iframe>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🔗 快速链接</h2>
+                <div class="documents">
+                    <div class="document-card">
+                        <h3>💻 GitHub 仓库</h3>
+                        <p>查看完整的源代码、部署脚本和技术文档。</p>
+                        <a href="https://github.com/AncestorMoney11/genesis-chain-eth" class="btn" target="_blank">访问 GitHub</a>
+                    </div>
+                    
+                    <div class="document-card">
+                        <h3>🔐 合约验证</h3>
+                        <p>在 Etherscan 上查看已验证的智能合约代码。</p>
+                        <a href="https://etherscan.io/token/0x37259E831460F6380c543291167D2cF0CeC170c4" class="btn" target="_blank">查看 Etherscan</a>
+                    </div>
+                    
+                    <div class="document-card">
+                        <h3>💰 持有信息</h3>
+                        <p>查看您的多签钱包中的 AMONEY 代币余额。</p>
+                        <a href="https://etherscan.io/token/0x37259E831460F6380c543291167D2cF0CeC170c4?a=0x7d1BE5Df48033baF59A74E6970bb1BA489D2f68B" class="btn" target="_blank">查看余额</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p><strong>AMONEY - 数字文明创世协议</strong></p>
+            <p>GitHub: <a href="https://github.com/AncestorMoney11/genesis-chain-eth" class="github-link">AncestorMoney11/genesis-chain-eth</a></p>
+            <p style="margin-top: 20px; font-size: 0.9em; color: #999;">
+                © 2026 AMONEY. 本网站由 GitHub Pages 提供支持。
+            </p>
+        </footer>
+    </div>
+    
+    <script>
+        function showPreview(docType) {
+            switchTab(docType);
+            // 平滑滚动到预览区域
+            document.querySelector('.section:nth-child(2)').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function switchTab(tabName) {
+            // 隐藏所有标签内容
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 移除所有标签按钮的活跃状态
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 显示选中的标签内容
+            document.getElementById(tabName).classList.add('active');
+            
+            // 激活相应的标签按钮
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
