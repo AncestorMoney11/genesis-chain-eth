@@ -1,0 +1,31 @@
+🚀 开始部署创世链ETH版本...
+
+部署者: 0x0F030eA2f73C769574856144dAf83618b035eE7e
+
+1. 部署AncestorMoney代币...
+Warning: Potentially unsafe deployment of contracts/AncestorMoney.sol:AncestorMoney
+
+    contracts/AncestorMoney.sol:35: Incorrect order of parent initializer calls.
+    - Found initializer calls to parent contracts in the following order: ERC20Upgradeable, OwnableUpgradeable, Ownable2StepUpgradeable, PausableUpgradeable
+    - Expected: ERC20Upgradeable, Ownable2StepUpgradeable, PausableUpgradeable
+        Call parent initializers in linearized order
+
+   AMONEY地址: 0x079439383A74af273c4f6C9258A1d53F4F130A24
+
+2. 部署进化储备合约...
+   进化储备地址: 0x4C56308e57660078fAbDBaa5b6D42af6C2CB1dFd
+
+3. 部署神圣遗产保险库实现合约...
+TypeError: invalid overrides parameter (argument="overrides", value="0x079439383A74af273c4f6C9258A1d53F4F130A24", code=INVALID_ARGUMENT, version=6.16.0)
+    at makeError (/home/ubuntu/genesis-chain-eth/node_modules/ethers/src.ts/utils/errors.ts:691:21)
+    at assert (/home/ubuntu/genesis-chain-eth/node_modules/ethers/src.ts/utils/errors.ts:719:25)
+    at assertArgument (/home/ubuntu/genesis-chain-eth/node_modules/ethers/src.ts/utils/errors.ts:731:5)
+    at copyOverrides (/home/ubuntu/genesis-chain-eth/node_modules/ethers/src.ts/contract/contract.ts:146:19)
+    at ContractFactory.getDeployTransaction (/home/ubuntu/genesis-chain-eth/node_modules/ethers/src.ts/contract/factory.ts:83:44)
+    at ContractFactory.deploy (/home/ubuntu/genesis-chain-eth/node_modules/ethers/src.ts/contract/factory.ts:105:31)
+    at main (/home/ubuntu/genesis-chain-eth/scripts/deploy-genesis-chain.js:43:47) {
+  code: 'INVALID_ARGUMENT',
+  argument: 'overrides',
+  value: '0x079439383A74af273c4f6C9258A1d53F4F130A24',
+  shortMessage: 'invalid overrides parameter'
+}

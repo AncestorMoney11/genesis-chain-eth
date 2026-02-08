@@ -1,0 +1,38 @@
+🚀 开始部署创世链ETH版本...
+
+部署者: 0x0F030eA2f73C769574856144dAf83618b035eE7e
+
+1. 部署AncestorMoney代币...
+Warning: Potentially unsafe deployment of contracts/AncestorMoney.sol:AncestorMoney
+
+    contracts/AncestorMoney.sol:35: Incorrect order of parent initializer calls.
+    - Found initializer calls to parent contracts in the following order: ERC20Upgradeable, OwnableUpgradeable, Ownable2StepUpgradeable, PausableUpgradeable
+    - Expected: ERC20Upgradeable, Ownable2StepUpgradeable, PausableUpgradeable
+        Call parent initializers in linearized order
+
+   AMONEY地址: 0x5672AC1f13E6f803707834de7976220A76eE9D1B
+
+2. 部署进化储备合约...
+   进化储备地址: 0xC942A09bca2BCe5c25315C4269BD009d628e293c
+
+3. 部署神圣遗产保险库...
+   保险库地址: 0xAD6e8F3987B3544cB033a3b1226d1CaBC3Ec4BAD
+
+4. 部署可升级保险库工厂...
+   保险库实现地址: 0x2bE8aAed40601ed6F853dec443537b98b1a013e7
+   工厂地址: 0x46ACbA0f8fA18a20B75856C860903e24355327f2
+
+5. 配置合约间关系...
+
+6. 执行创世分发...
+ProviderError: execution reverted: Pausable: paused
+    at HttpProvider.request (/home/ubuntu/genesis-chain-eth/node_modules/hardhat/src/internal/core/providers/http.ts:116:21)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at HardhatEthersProvider.estimateGas (/home/ubuntu/genesis-chain-eth/node_modules/@nomicfoundation/hardhat-ethers/src/internal/hardhat-ethers-provider.ts:246:27)
+    at /home/ubuntu/genesis-chain-eth/node_modules/@nomicfoundation/hardhat-ethers/src/signers.ts:339:35
+    at async Promise.all (index 0)
+    at HardhatEthersSigner._sendUncheckedTransaction (/home/ubuntu/genesis-chain-eth/node_modules/@nomicfoundation/hardhat-ethers/src/signers.ts:360:7)
+    at HardhatEthersSigner.sendTransaction (/home/ubuntu/genesis-chain-eth/node_modules/@nomicfoundation/hardhat-ethers/src/signers.ts:185:18)
+    at send (/home/ubuntu/genesis-chain-eth/node_modules/ethers/src.ts/contract/contract.ts:313:20)
+    at Proxy.genesisDistribution (/home/ubuntu/genesis-chain-eth/node_modules/ethers/src.ts/contract/contract.ts:352:16)
+    at main (/home/ubuntu/genesis-chain-eth/scripts/deploy-genesis-chain.js:81:5)
