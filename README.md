@@ -1,5 +1,9 @@
 # AMONEY - 数字文明创世协议
 
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Deployed-brightgreen?style=for-the-badge&logo=github)](https://AncestorMoney11.github.io/genesis-chain-eth/)
+
+
+
 ## 项目简介
 
 **AMONEY** 是一个开创性的数字文明创世协议，旨在构建一个去中心化、自治且可持续的数字生态系统。我们通过创新的区块链技术和智能合约，为数字资产的发行、管理和价值流转提供安全、透明且高效的基础设施。
@@ -81,7 +85,22 @@ npx hardhat test
 ## 联系我们
 
 *   **GitHub Issues**：[https://github.com/AncestorMoney11/genesis-chain-eth/issues](https://github.com/AncestorMoney11/genesis-chain-eth/issues)
-*   **邮箱**：[您的邮箱地址，例如：contact@amoney.io]
+*   **邮箱**：contact@amoney.io
+
+## 部署合约 (Mainnet)
+
+| 合约名称 | 合约地址 | Etherscan 链接 |
+| :--- | :--- | :--- |
+| **AMONEY Token (Proxy)** | `0x37259E831460F6380c543291167D2cF0CeC170c4` | [查看](https://etherscan.io/address/0x37259E831460F6380c543291167D2cF0CeC170c4) |
+| **AMONEY Token (Implementation)** | `0x7377915EccD8B58c245Db30be2C3c903D3E028A8` | [查看](https://etherscan.io/address/0x7377915EccD8B58c245Db30be2C3c903D3E028A8#code) |
+| **EvolutionReserve (Proxy)** | `0x4b7b9D5b82A050084980F922e87Abc6Bb963ac65` | [查看](https://etherscan.io/address/0x4b7b9D5b82A050084980F922e87Abc6Bb963ac65) |
+| **EvolutionReserve (Implementation)** | `0x48aAC5ec8C73d842c78fdB5953c591715dc94351` | [查看](https://etherscan.io/address/0x48aAC5ec8C73d842c78fdB5953c591715dc94351#code) |
+| **VaultFactory (Proxy)** | `0x1085caf9ef36F8d6D17Db20D8e22052867d3C99f` | [查看](https://etherscan.io/address/0x1085caf9ef36F8d6D17Db20D8e22052867d3C99f) |
+| **VaultFactory (Implementation)** | `0x05A9EdF8e111ABda26A893848ADf02568df3b63d` | [查看](https://etherscan.io/address/0x05A9EdF8e111ABda26A893848ADf02568df3b63d#code) |
+| **SacredVault (Implementation)** | `0x0c7117e8366fa99aab436d39E0eFbf1885Aa9E25` | [查看](https://etherscan.io/address/0x0c7117e8366fa99aab436d39E0eFbf1885Aa9E25#code) |
+| **Admin (Safe Multisig)** | `0x7d1BE5Df48033baF59A74E6970bb1BA489D2f68B` | [查看](https://etherscan.io/address/0x7d1BE5Df48033baF59A74E6970bb1BA489D2f68B) |
+
+
 
 ## 许可证
 
