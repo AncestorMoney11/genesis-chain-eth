@@ -7,6 +7,7 @@ import "./ISacredVault.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "./Errors.sol"; // 导入自定义错误
 
 contract SacredVault is Initializable, AccessControlUpgradeable, ReentrancyGuardUpgradeable {
     bytes32 public constant CREATOR_ROLE = keccak256("CREATOR_ROLE");
@@ -58,12 +59,12 @@ contract SacredVault is Initializable, AccessControlUpgradeable, ReentrancyGuard
         string calldata _metadataURI,
         ISacredVault.InheritanceCondition[] calldata _conditions
     ) external returns (uint256) {
-        require(_beneficiaries.length == _shares.length, "Array length mismatch");
+        if (_beneficiaries.length != _shares.length) revert ArrayLengthMismatch();
         uint256 totalShares = 0;
         for (uint i = 0; i < _shares.length; i++) {
             totalShares += _shares[i];
         }
-        require(totalShares == 1000, "Total shares must be 1000 (100%)");
+        if (totalShares != 1000) revert TotalSharesMismatch();
         
         uint256 vaultId = vaultCounter;
         vaultCounter++;
@@ -93,19 +94,20 @@ contract SacredVault is Initializable, AccessControlUpgradeable, ReentrancyGuard
 
     function addInheritanceCondition(uint256 _vaultId, ISacredVault.InheritanceCondition calldata _condition) external {
         Vault storage vault = vaults[_vaultId];
-        require(vault.currentOwner == msg.sender, "Only owner can add conditions");
+        if (vault.currentOwner != msg.sender) revert OnlyOwnerCanAddConditions();
         vault.conditions.push(_condition);
         emit ConditionAdded(_vaultId, _condition.conditionType, _condition.triggerValue);
     }
     
-    function executeInheritance(uint256 _vaultId, uint256 _conditionIndex, bytes calldata _data) external nonReentrant {
+    function executeInheritance(uint256 _vaultId, uint256 _conditionIndex) external nonReentrant {
         Vault storage vault = vaults[_vaultId];
-        require(vault.status == VaultStatus.Active, "Vault not active");
-        require(_conditionIndex < vault.conditions.length, "Invalid condition index");
+        if (vault.status != VaultStatus.Active) revert VaultNotActive();
+        if (_vaultId >= vaultCounter) revert InvalidVaultId(); // Added check for valid vaultId
+        if (_conditionIndex >= vault.conditions.length) revert InvalidConditionIndex();
 
         ISacredVault.InheritanceCondition storage condition = vault.conditions[_conditionIndex];
-        bool isMet = _isConditionMet(condition, _data);
-        require(isMet, "Inheritance condition not met");
+        bool isMet = _isConditionMet(condition); 
+        if (!isMet) revert InheritanceConditionNotMet();
 
         vault.status = VaultStatus.Inherited;
         vault.unlockingTimestamp = block.timestamp + 30 days;
@@ -118,19 +120,19 @@ contract SacredVault is Initializable, AccessControlUpgradeable, ReentrancyGuard
 
     function unlockVault(uint256 _vaultId) external {
         Vault storage vault = vaults[_vaultId];
-        require(vault.status == VaultStatus.Inherited, "Vault not in inherited state");
-        require(block.timestamp >= vault.unlockingTimestamp, "Lock period not over");
-        require(vault.currentOwner == msg.sender, "Only new owner can unlock");
+        if (vault.status != VaultStatus.Inherited) revert VaultNotInInheritedState();
+        if (block.timestamp < vault.unlockingTimestamp) revert LockPeriodNotOver();
+        if (vault.currentOwner != msg.sender) revert OnlyNewOwnerCanUnlock();
 
         vault.status = VaultStatus.Active;
         emit VaultUnlocked(_vaultId);
     }
     
-    function payMaintenanceFee(uint256 _vaultId, uint256 _amount) external {
+    function payMaintenanceFee(uint256 _vaultId, uint256 _amount) external nonReentrant {
         Vault storage vault = vaults[_vaultId];
-        require(vault.currentOwner == msg.sender, "Only owner can pay");
+        if (vault.currentOwner != msg.sender) revert Unauthorized(); // Use generic Unauthorized for now
         
-        require(amoneyToken.payVaultFee(msg.sender, _amount), "Fee payment failed");
+        if (!amoneyToken.payVaultFee(msg.sender, _amount)) revert FeePaymentFailed();
         
         vault.lastMaintenance = block.timestamp;
         vault.culturalEnergy += _amount / 10; // 10% of fee becomes cultural energy
@@ -166,7 +168,7 @@ contract SacredVault is Initializable, AccessControlUpgradeable, ReentrancyGuard
         return vaults[_vaultId].shares[_beneficiary];
     }
     
-    function _isConditionMet(ISacredVault.InheritanceCondition memory _condition, bytes calldata _data) internal view returns (bool) {
+    function _isConditionMet(ISacredVault.InheritanceCondition memory _condition) internal view returns (bool) {
         if (!_condition.isActive) return false;
         
         if (_condition.conditionType == ISacredVault.ConditionType.Time) {

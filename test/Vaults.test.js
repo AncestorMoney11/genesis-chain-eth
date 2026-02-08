@@ -150,7 +150,7 @@ describe("SacredVault and VaultFactory", function () {
             await ethers.provider.send("evm_increaseTime", [2]);
             await ethers.provider.send("evm_mine", []);
 
-            await expect(sacredVaultProxy.executeInheritance(testVaultId, 0, "0x"))
+            await expect(sacredVaultProxy.executeInheritance(testVaultId, 0))
                 .to.emit(sacredVaultProxy, "InheritanceTriggered")
                 .withArgs(testVaultId, owner.address, addr1.address, condition.conditionType);
 
@@ -165,7 +165,7 @@ describe("SacredVault and VaultFactory", function () {
             // Execute inheritance to lock the vault
             await ethers.provider.send("evm_increaseTime", [2]);
             await ethers.provider.send("evm_mine", []);
-            await sacredVaultProxy.executeInheritance(testVaultId, 0, "0x");
+            await sacredVaultProxy.executeInheritance(testVaultId, 0);
 
             // Fast forward time past unlockingTimestamp (30 days)
             await ethers.provider.send("evm_increaseTime", [30 * 24 * 60 * 60 + 1]);
