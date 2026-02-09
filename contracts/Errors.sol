@@ -27,3 +27,4 @@ error InvalidAddress();
 error DepositTooSmall();
 error TransferFailed();
 error InsufficientBalance();
+error InsufficientAllowance();
