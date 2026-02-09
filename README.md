@@ -22,6 +22,12 @@
 *   **VaultFactory & SacredVault**：金库工厂和圣金库合约，提供安全的资产存储和管理解决方案。
 *   **多签管理**：通过 Gnosis Safe 多签钱包，确保关键操作的安全性。
 
+## 主题曲
+
+我们为 AMONEY 项目创作了专属主题曲《COINCROSSING》，欢迎访问者欣赏：
+
+*   [AMONEY《COINCROSSING》.mp3](AMONEY_Theme_Song_COINCROSSING.mp3)
+
 ## 文档中心
 
 我们提供了详细的白皮书和项目报告，深入阐述了 AMONEY 的愿景、技术架构、经济模型和社区建设规划。您可以通过以下链接在线预览或下载：
