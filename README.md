@@ -1,5 +1,8 @@
 # AMONEY - 数字文明创世协议
 
+![AMONEY Logo](assets/amoney_logo.png)
+
+
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Deployed-brightgreen?style=for-the-badge&logo=github)](https://AncestorMoney11.github.io/genesis-chain-eth/)
 
 
