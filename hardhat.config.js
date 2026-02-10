@@ -30,7 +30,7 @@ module.exports = {
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
     mainnet: {
-      url: "https://ethereum-rpc.publicnode.com", // 使用备用公共 RPC 节点
+      url: "https://eth.llamarpc.com", // 使用 LlamaRPC 节点
       accounts: process.env.MAINNET_PRIVATE_KEY !== undefined ? [process.env.MAINNET_PRIVATE_KEY] : [],
     },
   },
