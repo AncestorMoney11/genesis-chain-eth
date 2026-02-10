@@ -4,8 +4,10 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 interface IAMONEY is IERC20 {
+    function YIN_YANG_CONVERTER() external view returns (address);
     event VaultFeeBurned(address indexed payer, uint256 amount);
     function payVaultFee(address _from, uint256 _amount) external returns (bool);
+    function setTaxExempt(address account, bool exempt) external;
     function setVaultAddress(address _vaultAddress) external;
     function setEvolutionReserve(address _evolutionReserve) external;
     function activateToken() external returns (bool);

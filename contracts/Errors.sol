@@ -28,3 +28,5 @@ error DepositTooSmall();
 error TransferFailed();
 error InsufficientBalance();
 error InsufficientAllowance();
+error InvalidSacrificialShare();
+error MaxCulturalEventsExceeded();

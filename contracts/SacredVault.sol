@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.22;
 
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+
 import "./IAMONEY.sol";
 import "./ISacredVault.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
@@ -12,6 +12,7 @@ import "./Errors.sol"; // 导入自定义错误
 contract SacredVault is Initializable, AccessControlUpgradeable, ReentrancyGuardUpgradeable {
     bytes32 public constant CREATOR_ROLE = keccak256("CREATOR_ROLE");
     bytes32 public constant BENEFICIARY_ROLE = keccak256("BENEFICIARY_ROLE");
+    bytes32 public constant VAULT_FACTORY_ROLE = keccak256("VAULT_FACTORY_ROLE");
 
     IAMONEY public amoneyToken;
 
@@ -27,6 +28,7 @@ contract SacredVault is Initializable, AccessControlUpgradeable, ReentrancyGuard
         ISacredVault.InheritanceCondition[] conditions;
         uint256 unlockingTimestamp; // For lock period after inheritance
         uint256 culturalEnergy; // Cultural Energy
+        uint256 sacrificialShare; // 祭祀份额，例如 1000 代表 100%
     }
     
     enum VaultStatus { Active, Inherited, Dissolved }
@@ -45,11 +47,13 @@ contract SacredVault is Initializable, AccessControlUpgradeable, ReentrancyGuard
         _disableInitializers();
     }
 
-    function initialize(address _amoneyToken, address initialAdmin) public virtual initializer {
+    function initialize(address _amoneyToken, address initialAdmin, address vaultFactoryAddress) public virtual initializer {
+        if (_amoneyToken == address(0)) revert InvalidAddress();
         __AccessControl_init();
         __ReentrancyGuard_init();
         amoneyToken = IAMONEY(_amoneyToken);
         _grantRole(DEFAULT_ADMIN_ROLE, initialAdmin);
+        _grantRole(VAULT_FACTORY_ROLE, vaultFactoryAddress);
     }
     
     function createSacredVault(
@@ -57,14 +61,16 @@ contract SacredVault is Initializable, AccessControlUpgradeable, ReentrancyGuard
         address[] calldata _beneficiaries,
         uint256[] calldata _shares,
         string calldata _metadataURI,
-        ISacredVault.InheritanceCondition[] calldata _conditions
-    ) external returns (uint256) {
+        ISacredVault.InheritanceCondition[] calldata _conditions,
+        uint256 _sacrificialShare // 新增：祭祀份额
+    ) external onlyRole(VAULT_FACTORY_ROLE) returns (uint256) {
         if (_beneficiaries.length != _shares.length) revert ArrayLengthMismatch();
+        if (_sacrificialShare > 1000) revert InvalidSacrificialShare(); // 祭祀份额不能超过1000 (100%)
         uint256 totalShares = 0;
         for (uint i = 0; i < _shares.length; i++) {
             totalShares += _shares[i];
         }
-        if (totalShares != 1000) revert TotalSharesMismatch();
+        if (totalShares + _sacrificialShare > 1000) revert TotalSharesMismatch(); // 总份额加上祭祀份额不能超过1000
         
         uint256 vaultId = vaultCounter;
         vaultCounter++;
@@ -76,6 +82,7 @@ contract SacredVault is Initializable, AccessControlUpgradeable, ReentrancyGuard
         newVault.lastMaintenance = block.timestamp;
         newVault.status = VaultStatus.Active;
         newVault.metadataURI = _metadataURI;
+        newVault.sacrificialShare = _sacrificialShare;
         for (uint i = 0; i < _conditions.length; i++) {
             newVault.conditions.push(_conditions[i]);
         }
@@ -167,7 +174,50 @@ contract SacredVault is Initializable, AccessControlUpgradeable, ReentrancyGuard
     function getVaultShares(uint256 _vaultId, address _beneficiary) external view returns (uint256) {
         return vaults[_vaultId].shares[_beneficiary];
     }
+
+    function setSacrificialShare(uint256 _vaultId, uint256 _newSacrificialShare) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        Vault storage vault = vaults[_vaultId];
+        if (vault.currentOwner != msg.sender) revert Unauthorized(); // 只有当前所有者可以修改
+        if (_newSacrificialShare > 1000) revert InvalidSacrificialShare();
+        vault.sacrificialShare = _newSacrificialShare;
+    }
     
+    function distributeInheritance(uint256 _vaultId) external nonReentrant {
+        Vault storage vault = vaults[_vaultId];
+        if (vault.status != VaultStatus.Inherited) revert VaultNotInInheritedState();
+        if (block.timestamp < vault.unlockingTimestamp) revert LockPeriodNotOver();
+
+        uint256 totalVaultBalance = amoneyToken.balanceOf(address(this));
+        if (totalVaultBalance == 0) {
+            vault.status = VaultStatus.Dissolved;
+            return;
+        }
+
+        uint256 amountToSacrifice = (totalVaultBalance * vault.sacrificialShare) / 1000;
+        uint256 remainingBalance = totalVaultBalance - amountToSacrifice;
+
+        if (amountToSacrifice > 0) {
+            amoneyToken.transfer(amoneyToken.YIN_YANG_CONVERTER(), amountToSacrifice);
+        }
+
+        uint256 distributedAmount = 0;
+        for (uint i = 0; i < vault.beneficiaries.length; i++) {
+            address beneficiary = vault.beneficiaries[i];
+            uint256 shareAmount = (remainingBalance * vault.shares[beneficiary]) / 1000;
+            if (shareAmount > 0) {
+                amoneyToken.transfer(beneficiary, shareAmount);
+                distributedAmount += shareAmount;
+            }
+        }
+
+        // 将因精度问题剩余的代币转给第一个受益人
+        if (remainingBalance > distributedAmount) {
+            amoneyToken.transfer(vault.beneficiaries[0], remainingBalance - distributedAmount);
+        }
+
+        vault.status = VaultStatus.Dissolved;
+    }
+
     function _isConditionMet(ISacredVault.InheritanceCondition memory _condition) internal view returns (bool) {
         if (!_condition.isActive) return false;
         

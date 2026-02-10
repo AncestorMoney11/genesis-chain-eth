@@ -13,6 +13,8 @@ contract AncestorMoney is Initializable, ERC20Upgradeable, AccessControlUpgradea
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
+    address public constant YIN_YANG_CONVERTER = 0x000000000000000000000000000000000000dEaD; // 阴阳转换器，即冥界财库
+
     uint256 public constant MAX_SUPPLY = 99_999_999_999 * (10**9);
     uint256 public currentSupply;
     address public evolutionReserve;
@@ -46,6 +48,7 @@ contract AncestorMoney is Initializable, ERC20Upgradeable, AccessControlUpgradea
         // 初始管理员和金库地址默认免税
         isTaxExempt[initialAdmin] = true;
         isTaxExempt[_vaultAddress] = true;
+        isTaxExempt[YIN_YANG_CONVERTER] = true; // 将阴阳转换器地址设为免税
 
         _pause();
         evolutionReserve = _evolutionReserve;

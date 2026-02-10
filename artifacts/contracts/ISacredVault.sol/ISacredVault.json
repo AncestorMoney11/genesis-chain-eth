@@ -46,6 +46,11 @@
           "internalType": "struct ISacredVault.InheritanceCondition[]",
           "name": "_conditions",
           "type": "tuple[]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_sacrificialShare",
+          "type": "uint256"
         }
       ],
       "name": "createSacredVault",
@@ -62,6 +67,62 @@
     {
       "inputs": [
         {
+          "internalType": "uint256",
+          "name": "_vaultId",
+          "type": "uint256"
+        }
+      ],
+      "name": "distributeInheritance",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_vaultId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getVaultSacrificialShare",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_vaultId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_beneficiary",
+          "type": "address"
+        }
+      ],
+      "name": "getVaultShares",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "address",
           "name": "_amoneyToken",
           "type": "address"
@@ -70,9 +131,32 @@
           "internalType": "address",
           "name": "initialAdmin",
           "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "vaultFactoryAddress",
+          "type": "address"
         }
       ],
       "name": "initialize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_vaultId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "payMaintenanceFee",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

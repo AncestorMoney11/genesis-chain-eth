@@ -9,7 +9,7 @@ describe("EvolutionReserve", function () {
     let addr2;
 
     const MIN_DEPOSIT_AMOUNT = ethers.parseUnits("1", 9); // 1 AMONEY
-    const BURN_RATE_BPS = 5; // 0.5% burn rate in basis points (5/1000)
+    const BURN_RATE_BPS = 5n; // 0.5% burn rate in basis points (5/1000)
 
     beforeEach(async function () {
         [owner, addr1, addr2] = await ethers.getSigners();
@@ -31,11 +31,13 @@ describe("EvolutionReserve", function () {
 
         // Deploy EvolutionReserve
         const EvolutionReserve = await ethers.getContractFactory("EvolutionReserve");
-        evolutionReserve = await upgrades.deployProxy(EvolutionReserve, [amoney.target], { initializer: 'initialize' });
+        evolutionReserve = await upgrades.deployProxy(EvolutionReserve, [amoney.target, owner.address], { initializer: 'initialize' });
         await evolutionReserve.waitForDeployment();
 
         // Set EvolutionReserve address in AMONEY token
         await amoney.connect(owner).setEvolutionReserve(evolutionReserve.target);
+        // Set EvolutionReserve as tax exempt to avoid tax on deposits/withdrawals
+        await amoney.connect(owner).setTaxExempt(evolutionReserve.target, true);
     });
 
     describe("Deployment", function () {
@@ -44,7 +46,7 @@ describe("EvolutionReserve", function () {
         });
 
         it("Should have the owner as the deployer", async function () {
-            expect(await evolutionReserve.owner()).to.equal(owner.address);
+            expect(await evolutionReserve.hasRole(await evolutionReserve.DEFAULT_ADMIN_ROLE(), owner.address)).to.be.true;
         });
     });
 
@@ -52,14 +54,12 @@ describe("EvolutionReserve", function () {
         it("Should allow users to deposit AMONEY", async function () {
             const depositAmount = ethers.parseUnits("10", 9);
             await amoney.connect(owner).approve(evolutionReserve.target, depositAmount);
-
-            const expectedAmountInReserve = depositAmount - (depositAmount * BigInt(BURN_RATE_BPS) / BigInt(1000));
-
             await expect(evolutionReserve.connect(owner).deposit(depositAmount))
                 .to.emit(evolutionReserve, "Deposit")
                 .withArgs(owner.address, depositAmount);
 
-            expect(await amoney.balanceOf(evolutionReserve.target)).to.equal(expectedAmountInReserve);
+            // EvolutionReserve is tax exempt, so the full amount should be deposited
+            expect(await amoney.balanceOf(evolutionReserve.target)).to.equal(depositAmount);
         });
 
         it("Should revert if deposit amount is too small", async function () {
@@ -92,20 +92,19 @@ describe("EvolutionReserve", function () {
 
         it("Should allow owner to withdraw AMONEY", async function () {
             const withdrawAmount = ethers.parseUnits("50", 9);
-            const expectedAmountReceivedByOwner = withdrawAmount - (withdrawAmount * BigInt(BURN_RATE_BPS) / BigInt(1000));
-
             await expect(evolutionReserve.connect(owner).withdraw(withdrawAmount))
                 .to.emit(evolutionReserve, "Withdrawal")
                 .withArgs(owner.address, withdrawAmount);
 
+            // EvolutionReserve is tax exempt, so the full amount should be withdrawn without tax
             expect(await amoney.balanceOf(evolutionReserve.target)).to.equal(initialReserveBalanceAfterDeposit - withdrawAmount);
-            expect(await amoney.balanceOf(owner.address)).to.equal(initialOwnerBalanceBeforeWithdrawal + expectedAmountReceivedByOwner);
+            expect(await amoney.balanceOf(owner.address)).to.equal(initialOwnerBalanceBeforeWithdrawal + withdrawAmount);
         });
 
         it("Should revert if non-owner tries to withdraw", async function () {
             const withdrawAmount = ethers.parseUnits("10", 9);
             await expect(evolutionReserve.connect(addr1).withdraw(withdrawAmount))
-                .to.be.revertedWith("Ownable: caller is not the owner");
+                .to.be.revertedWith(`AccessControl: account ${addr1.address.toLowerCase()} is missing role ${await evolutionReserve.DEFAULT_ADMIN_ROLE()}`)
         });
 
         it("Should revert if withdraw amount is zero", async function () {
@@ -146,7 +145,7 @@ describe("EvolutionReserve", function () {
 
         it("Should revert if non-owner tries to set AMONEY token address", async function () {
             await expect(evolutionReserve.connect(addr1).setAMoneyToken(addr2.address))
-                .to.be.revertedWith("Ownable: caller is not the owner");
+                .to.be.revertedWith(`AccessControl: account ${addr1.address.toLowerCase()} is missing role ${await evolutionReserve.DEFAULT_ADMIN_ROLE()}`)
         });
 
         it("Should revert if new AMONEY token address is zero", async function () {
@@ -161,9 +160,8 @@ describe("EvolutionReserve", function () {
             await amoney.connect(owner).approve(evolutionReserve.target, depositAmount);
             await evolutionReserve.connect(owner).deposit(depositAmount);
 
-            const expectedAmountInReserve = depositAmount - (depositAmount * BigInt(BURN_RATE_BPS) / BigInt(1000));
-
-            expect(await evolutionReserve.getContractBalance()).to.equal(expectedAmountInReserve);
+            // EvolutionReserve is tax exempt, so the full amount should be in the contract
+            expect(await evolutionReserve.getContractBalance()).to.equal(depositAmount);
         });
     });
 });

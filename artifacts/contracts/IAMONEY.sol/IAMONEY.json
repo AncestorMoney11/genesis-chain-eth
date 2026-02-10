@@ -74,6 +74,19 @@
     },
     {
       "inputs": [],
+      "name": "YIN_YANG_CONVERTER",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "activateToken",
       "outputs": [
         {
@@ -218,6 +231,24 @@
         }
       ],
       "name": "setEvolutionReserve",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "exempt",
+          "type": "bool"
+        }
+      ],
+      "name": "setTaxExempt",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

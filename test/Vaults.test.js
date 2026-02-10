@@ -32,7 +32,7 @@ describe("SacredVault and VaultFactory", function () {
 
         // Deploy EvolutionReserve (not directly used in these tests, but part of the ecosystem)
         const EvolutionReserve = await ethers.getContractFactory("EvolutionReserve");
-        evolutionReserve = await upgrades.deployProxy(EvolutionReserve, [amoney.target], { initializer: 'initialize' });
+        evolutionReserve = await upgrades.deployProxy(EvolutionReserve, [amoney.target, owner.address], { initializer: 'initialize' });
         await evolutionReserve.waitForDeployment();
         await amoney.connect(owner).setEvolutionReserve(evolutionReserve.target);
 
@@ -68,7 +68,8 @@ describe("SacredVault and VaultFactory", function () {
                 beneficiaries,
                 shares,
                 metadataURI,
-                conditions
+                conditions,
+                0 // Add sacrificialShare for testing
             ))
             .to.emit(vaultFactory, "VaultProxyCreated");
 
@@ -98,7 +99,8 @@ describe("SacredVault and VaultFactory", function () {
                 beneficiaries,
                 shares,
                 metadataURI,
-                conditions
+                conditions,
+                0 // Add sacrificialShare for testing
             );
             const receipt = await tx.wait();
             const event = receipt.logs.find(e => e.fragment && e.fragment.name === 'VaultProxyCreated');
